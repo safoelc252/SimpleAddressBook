@@ -57,14 +57,24 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: Actions
     @IBAction func editRecord(_ sender: UIButton) {
-        if (editRecordDelegate?.getValue(key: nameUser.text!) != "none") && (currentusername != nameUser.text) {
-            let alert = UIAlertController(title: "Error", message: "\"" + nameUser.text! + "\" is already in the record!", preferredStyle: UIAlertControllerStyle.alert)
+        let newusername = nameUser.text
+        let newphonenumber = phoneNumber.text
+        
+        if (newusername?.isEmpty)! || (newphonenumber?.isEmpty)! {
+            let alert = UIAlertController(title: "Error", message: "Name or phone number is empty!", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
-        } else {
-            // apply changes and dismiss
-            editRecordDelegate?.updateRecordTable(oldusername: currentusername, newusername: nameUser.text!, newphonenumber: phoneNumber.text!)
-            self.presentingViewController!.dismiss(animated:true, completion:nil)
+        }
+        else {
+            if (editRecordDelegate?.getValue(key: newusername!) != "none") && (currentusername != newusername) {
+                let alert = UIAlertController(title: "Error", message: "\"" + newusername! + "\" is already in the record!", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                // apply changes and dismiss
+                editRecordDelegate?.updateRecordTable(oldusername: currentusername, newusername: newusername!, newphonenumber: newphonenumber!)
+                self.presentingViewController!.dismiss(animated:true, completion:nil)
+            }
         }
     }
     @IBAction func cancelRecord(_ sender: UIButton) {

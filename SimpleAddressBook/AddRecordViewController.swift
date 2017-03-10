@@ -54,16 +54,27 @@ class AddRecordViewController: UIViewController, UITextFieldDelegate {
     //MARK: Actions
     
     @IBAction func addRecord(_ sender: UIButton) {
-        // validate add
-        if mainViewControllerInstance.phonebookusers[nameUser.text!] == nil {
-            mainViewControllerInstance.phonebookusers[nameUser.text!] = phoneNumber.text!
+        let newusername = nameUser.text
+        let newphonenumber = phoneNumber.text
         
-            // dismiss the modal view
-            self.presentingViewController!.dismiss(animated:true, completion:nil)
-        } else {
-            let alert = UIAlertController(title: "Error", message: "\"" + nameUser.text! + "\" is already in the record!", preferredStyle: UIAlertControllerStyle.alert)
+        if (newusername?.isEmpty)! || (newphonenumber?.isEmpty)! {
+            let alert = UIAlertController(title: "Error", message: "Name or phone number is empty!", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+        }
+        else {
+            
+            // validate add
+            if mainViewControllerInstance.phonebookusers[newusername!] == nil {
+                mainViewControllerInstance.phonebookusers[newusername!] = newphonenumber!
+        
+                // dismiss the modal view
+                self.presentingViewController!.dismiss(animated:true, completion:nil)
+            } else {
+                let alert = UIAlertController(title: "Error", message: "\"" + nameUser.text! + "\" is already in the record!", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         }
     }
     @IBAction func cancelRecord(_ sender: UIButton) {
