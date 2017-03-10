@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A0C08B561E6FAE89001C822E /* UserEntryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C08B551E6FAE89001C822E /* UserEntryTableViewCell.swift */; };
+		A0C08B581E6FB64E001C822E /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C08B571E6FB64E001C822E /* UserInfo.swift */; };
+		A0C08B5C1E6FD936001C822E /* UserInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C08B5B1E6FD936001C822E /* UserInfoTableViewController.swift */; };
+		A0C08B5E1E70FCD0001C822E /* AddRecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C08B5D1E70FCD0001C822E /* AddRecordViewController.swift */; };
+		A0C08B621E710B7D001C822E /* EditRecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C08B611E710B7D001C822E /* EditRecordViewController.swift */; };
 		A0C6FB781E6F9C1D007DE9C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C6FB771E6F9C1D007DE9C7 /* AppDelegate.swift */; };
 		A0C6FB7A1E6F9C1D007DE9C7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C6FB791E6F9C1D007DE9C7 /* ViewController.swift */; };
 		A0C6FB7D1E6F9C1D007DE9C7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0C6FB7B1E6F9C1D007DE9C7 /* Main.storyboard */; };
@@ -26,6 +31,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A0C08B551E6FAE89001C822E /* UserEntryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserEntryTableViewCell.swift; path = ../UserEntryTableViewCell.swift; sourceTree = "<group>"; };
+		A0C08B571E6FB64E001C822E /* UserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
+		A0C08B5B1E6FD936001C822E /* UserInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoTableViewController.swift; path = ../UserInfoTableViewController.swift; sourceTree = "<group>"; };
+		A0C08B5D1E70FCD0001C822E /* AddRecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddRecordViewController.swift; sourceTree = "<group>"; };
+		A0C08B611E710B7D001C822E /* EditRecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditRecordViewController.swift; path = ../EditRecordViewController.swift; sourceTree = "<group>"; };
 		A0C6FB741E6F9C1D007DE9C7 /* SimpleAddressBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleAddressBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0C6FB771E6F9C1D007DE9C7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A0C6FB791E6F9C1D007DE9C7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -77,8 +87,13 @@
 		A0C6FB761E6F9C1D007DE9C7 /* SimpleAddressBook */ = {
 			isa = PBXGroup;
 			children = (
+				A0C08B611E710B7D001C822E /* EditRecordViewController.swift */,
+				A0C08B5B1E6FD936001C822E /* UserInfoTableViewController.swift */,
+				A0C08B551E6FAE89001C822E /* UserEntryTableViewCell.swift */,
 				A0C6FB771E6F9C1D007DE9C7 /* AppDelegate.swift */,
 				A0C6FB791E6F9C1D007DE9C7 /* ViewController.swift */,
+				A0C08B5D1E70FCD0001C822E /* AddRecordViewController.swift */,
+				A0C08B571E6FB64E001C822E /* UserInfo.swift */,
 				A0C6FB7B1E6F9C1D007DE9C7 /* Main.storyboard */,
 				A0C6FB7E1E6F9C1D007DE9C7 /* Assets.xcassets */,
 				A0C6FB801E6F9C1D007DE9C7 /* LaunchScreen.storyboard */,
@@ -199,8 +214,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0C08B5C1E6FD936001C822E /* UserInfoTableViewController.swift in Sources */,
+				A0C08B581E6FB64E001C822E /* UserInfo.swift in Sources */,
 				A0C6FB7A1E6F9C1D007DE9C7 /* ViewController.swift in Sources */,
+				A0C08B561E6FAE89001C822E /* UserEntryTableViewCell.swift in Sources */,
 				A0C6FB781E6F9C1D007DE9C7 /* AppDelegate.swift in Sources */,
+				A0C08B621E710B7D001C822E /* EditRecordViewController.swift in Sources */,
+				A0C08B5E1E70FCD0001C822E /* AddRecordViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,6 +426,7 @@
 				A0C6FB931E6F9C1E007DE9C7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A0C6FB941E6F9C1E007DE9C7 /* Build configuration list for PBXNativeTarget "SimpleAddressBookTests" */ = {
 			isa = XCConfigurationList;
@@ -414,6 +435,7 @@
 				A0C6FB961E6F9C1E007DE9C7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
