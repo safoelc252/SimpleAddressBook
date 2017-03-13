@@ -10,11 +10,8 @@ import UIKit
 
 class AddRecordViewController: UIViewController, UITextFieldDelegate {
     
-    // User Data
-    var mainViewControllerInstance:ViewController!
-    
     //MARK: Properties
-    
+    weak var recordAccessorDelegate:RecordAccessorDelegate?
     @IBOutlet weak var nameUser: UITextField!
     @IBOutlet weak var phoneNumber: UITextField!
 
@@ -57,17 +54,26 @@ class AddRecordViewController: UIViewController, UITextFieldDelegate {
         let newusername = nameUser.text
         let newphonenumber = phoneNumber.text
         
-        if (newusername?.isEmpty)! || (newphonenumber?.isEmpty)! {
-            let alert = UIAlertController(title: "Error", message: "Name or phone number is empty!", preferredStyle: UIAlertControllerStyle.alert)
+        guard let username = nameUser.text, !username.isEmpty else {
+            let alert = UIAlertController(title: "Error", message: "Name is empty!", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+            return
         }
-        else {
-            
-            // validate add
-            if mainViewControllerInstance.phonebookusers[newusername!] == nil {
-                mainViewControllerInstance.phonebookusers[newusername!] = newphonenumber!
         
+        guard let phonenumber = phoneNumber.text, !phonenumber.isEmpty else {
+            let alert = UIAlertController(title: "Error", message: "Phone number is empty!", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        if var allRecords = recordAccessorDelegate?.getAllRecords() {
+            // validate add
+            if allRecords[newusername!] == nil {
+                allRecords[newusername!] = newphonenumber!
+        
+                recordAccessorDelegate?.setAllRecords(newRecords: allRecords)
                 // dismiss the modal view
                 self.presentingViewController!.dismiss(animated:true, completion:nil)
             } else {

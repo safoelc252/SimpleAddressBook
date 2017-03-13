@@ -8,21 +8,20 @@
 
 import UIKit
 
-protocol EditRecordDelegate: class{
-    func updateRecordTable(oldusername:String, newusername:String, newphonenumber:String)
-    func getValue(key:String) -> String
+protocol EditRecordDelegate: class {
+    func updateTable()
 }
 
 class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
     
     //MARK: Properties
-    var mainViewControllerInstance:ViewController!
+    weak var recordAccessorDelegate: RecordAccessorDelegate?
     var phonebookuserkeys = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadSampleUsers()
+        loadUsers()
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,7 +36,7 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return mainViewControllerInstance!.phonebookusers.count
+        return (recordAccessorDelegate?.getAllRecords().count)!
     }
 
     
@@ -53,7 +52,7 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         let user = phonebookuserkeys[indexPath.row]
         
         cell.nameLabel.text = user
-        cell.phonenumberLabel.text = mainViewControllerInstance!.phonebookusers[user]
+        cell.phonenumberLabel.text = recordAccessorDelegate?.getAllRecords()[user]
         cell.editButton.tag = indexPath.row
         cell.deleteButton.tag = indexPath.row
         return cell
@@ -106,10 +105,10 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
     */
     
     //MARK: Private Methods
-    private func loadSampleUsers() {
+    private func loadUsers() {
         phonebookuserkeys.removeAll()
         // iterate collection
-        for userkey in mainViewControllerInstance.phonebookusers.keys {
+        for userkey in (recordAccessorDelegate?.getAllRecords().keys)! {
             phonebookuserkeys.append(userkey)
         }
     }
@@ -117,39 +116,28 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
     //MARK: Actions
     @IBAction func editCurrent(_ sender: UIButton) {
         // present the edit screen modally
-        let VC1 = self.storyboard!.instantiateViewController(withIdentifier:"editRecord")
-        weak var editVC = (VC1 as! EditRecordViewController)
-        editVC!.currentusername = phonebookuserkeys[sender.tag]
-        editVC!.currentphonenumber = mainViewControllerInstance.phonebookusers[phonebookuserkeys[sender.tag]]!
-        editVC!.editRecordDelegate = self
-        self.present(VC1, animated:true, completion:nil)
+        if let editVC = self.storyboard!.instantiateViewController(withIdentifier:"editRecord") as? EditRecordViewController {
+            editVC.currentusername = phonebookuserkeys[sender.tag]
+            editVC.currentphonenumber = recordAccessorDelegate?.getAllRecords()[phonebookuserkeys[sender.tag]]!
+            editVC.recordAccessorDelegate = self.recordAccessorDelegate
+            editVC.editRecordDelegate = self
+            self.present(editVC, animated:true, completion:nil)
+        }
+        
+        
     }
     @IBAction func deleteCurrent(_ sender: UIButton) {
-        mainViewControllerInstance.phonebookusers[phonebookuserkeys[sender.tag]] = nil
-        loadSampleUsers()
+        if var allRecords:[String:String] = (recordAccessorDelegate?.getAllRecords()) {
+            allRecords.removeValue(forKey: phonebookuserkeys[sender.tag])
+            recordAccessorDelegate?.setAllRecords(newRecords: allRecords)
+        }
+        loadUsers()
         self.tableView.reloadData()
     }
     
     //MARK: Delegate
-    func updateRecordTable(oldusername:String, newusername:String, newphonenumber:String) {
-        // Apply changes to current data model
-        mainViewControllerInstance.phonebookusers[newusername] = newphonenumber
-        if oldusername != newusername {
-            mainViewControllerInstance.phonebookusers[oldusername] = nil
-        }
-        for userkey in mainViewControllerInstance.phonebookusers.keys {
-            phonebookuserkeys.append(userkey)
-        }
-        
-        loadSampleUsers()
+    func updateTable() {
+        loadUsers()
         self.tableView.reloadData()
-    }
-    
-    func getValue(key:String) -> String {
-        if (mainViewControllerInstance.phonebookusers[key] != nil) {
-            return mainViewControllerInstance.phonebookusers[key]!
-        } else {
-            return "none"
-        }
     }
 }

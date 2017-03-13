@@ -14,6 +14,7 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
     var currentusername:String!
     var currentphonenumber:String!
     
+    weak var recordAccessorDelegate:RecordAccessorDelegate?
     weak var editRecordDelegate:EditRecordDelegate?
 
     //MARK: Properties
@@ -60,19 +61,36 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
         let newusername = nameUser.text
         let newphonenumber = phoneNumber.text
         
-        if (newusername?.isEmpty)! || (newphonenumber?.isEmpty)! {
-            let alert = UIAlertController(title: "Error", message: "Name or phone number is empty!", preferredStyle: UIAlertControllerStyle.alert)
+        guard let username = nameUser.text, !username.isEmpty else {
+            let alert = UIAlertController(title: "Error", message: "Name is empty!", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+            return
         }
-        else {
-            if (editRecordDelegate?.getValue(key: newusername!) != "none") && (currentusername != newusername) {
+        
+        guard let phonenumber = phoneNumber.text, !phonenumber.isEmpty else {
+            let alert = UIAlertController(title: "Error", message: "Phone number is empty!", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        if var allRecords = recordAccessorDelegate?.getAllRecords() {
+            if (allRecords[newusername!] != nil) && (currentusername != newusername) {
                 let alert = UIAlertController(title: "Error", message: "\"" + newusername! + "\" is already in the record!", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             } else {
+                
                 // apply changes and dismiss
-                editRecordDelegate?.updateRecordTable(oldusername: currentusername, newusername: newusername!, newphonenumber: newphonenumber!)
+                allRecords[newusername!] = newphonenumber
+                if currentusername != newusername {
+                    allRecords[currentusername] = nil
+                }
+                
+                recordAccessorDelegate?.setAllRecords(newRecords: allRecords)
+                editRecordDelegate?.updateTable()
+                
                 self.presentingViewController!.dismiss(animated:true, completion:nil)
             }
         }
@@ -80,6 +98,7 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
     @IBAction func cancelRecord(_ sender: UIButton) {
         
         //dismiss
+//        self.dismiss(animated: <#T##Bool#>, completion: <#T##(() -> Void)?##(() -> Void)?##() -> Void#>)
         self.presentingViewController!.dismiss(animated:true, completion:nil)
     }
     

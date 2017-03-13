@@ -8,18 +8,24 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+protocol RecordAccessorDelegate: class {
+    func getAllRecords() -> [String:String]
+    func setAllRecords(newRecords: [String:String]) 
+}
+
+class ViewController: UIViewController, RecordAccessorDelegate {
+    // Constant
+    let MAX_ITEM_COUNT = 10
     
     // User data
     var phonebookusers = [String:String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        for idx in 1...49 {
+        
+        for idx in 1...(MAX_ITEM_COUNT - 1) {
             phonebookusers["User\(idx)"] = "0123"
         }
-        //phonebookusers["Default"] = "0123"
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,28 +44,43 @@ class ViewController: UIViewController {
         */
         
         // METHOD2: pushes the new view controller to the navigation stack of the existing navigation controller, back button is handled
-        let VC1 = self.storyboard!.instantiateViewController(withIdentifier: "listRecords") as! UITableViewController
-        (VC1 as! UserInfoTableViewController).mainViewControllerInstance = self
+        let VC1 = self.storyboard!.instantiateViewController(withIdentifier: "listRecords") as! UserInfoTableViewController
+        VC1.recordAccessorDelegate = self
         self.navigationController!.pushViewController(VC1, animated:true)
         
         /* // METHOD3: creates a new navigation controller for the new view controller and present it modally, back button is not handled with this method
         let VC1 = self.storyboard!.instantiateViewController(withIdentifier:"listRecords") as! UITableViewController
-        let navController = UINavigationController(rootViewController: VC1)
+        let navController = UINavigationController(: VC1)
         self.present(navController, animated:true, completion:nil)
         */
     }
     @IBAction func addRecord(_ sender: UIButton) {
         
         // present the add screen modally
-        if (phonebookusers.count < 50) {
-            let VC1 = self.storyboard!.instantiateViewController(withIdentifier:"addRecord")
-            (VC1 as! AddRecordViewController).mainViewControllerInstance = self
+        if (phonebookusers.count < MAX_ITEM_COUNT) {
+            let VC1 = self.storyboard!.instantiateViewController(withIdentifier:"addRecord") as! AddRecordViewController
+            VC1.recordAccessorDelegate = self
             self.present(VC1, animated:true, completion:nil)
         } else {
-            let alert = UIAlertController(title: "Error", message: "Record capacity is only 50 and is now full!", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Error", message: "Record is full! Only 10 items are allowed.", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+    }
+    @IBAction func exitNow(_ sender: UIButton) {
+        
+        let alert = UIAlertController(title: "Alert!", message: "Are you sure you want to exit?", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction!) in exit(0)}))
+        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    //MARK: Delegates
+    func getAllRecords() -> [String:String] {
+        return phonebookusers
+    }
+    func setAllRecords(newRecords: [String:String]) {
+        phonebookusers = newRecords
     }
 }
 

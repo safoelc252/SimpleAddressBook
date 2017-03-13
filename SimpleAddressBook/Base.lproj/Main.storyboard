@@ -23,7 +23,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="90"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YQT-XX-y0z" id="fTr-8v-hcO">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="89"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="89.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nux-UQ-jrX">
@@ -195,6 +195,14 @@
                                     <action selector="addRecord:" destination="BYZ-38-t0r" eventType="touchUpInside" id="sIJ-Wy-d1R"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TOr-09-SKQ">
+                                <rect key="frame" x="172" y="294" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Exit"/>
+                                <connections>
+                                    <action selector="exitNow:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fyq-Fs-k1c"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
@@ -296,6 +304,65 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eFP-q1-EWo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-583.20000000000005" y="-18.440779610194905"/>
+        </scene>
+        <!--Main Menu-->
+        <scene sceneID="K7b-Pc-OGD">
+            <objects>
+                <viewController id="Wqh-Kt-cQl" customClass="ViewController" customModule="SimpleAddressBook" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="QKg-C5-qUn"/>
+                        <viewControllerLayoutGuide type="bottom" id="jdW-ox-i4C"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Exm-RQ-1go">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Simple Address Book" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Veq-Q4-FRR">
+                                <rect key="frame" x="106" y="323" width="163" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="Ntk-IF-Eqa"/>
+                                    <constraint firstAttribute="width" constant="163" id="q8N-Ro-mw7"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmb-Hn-8xP">
+                                <rect key="frame" x="142" y="218" width="90" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="View records"/>
+                                <connections>
+                                    <action selector="viewAllRecords:" destination="Wqh-Kt-cQl" eventType="touchUpInside" id="OS4-oI-WYP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFi-NO-fCF">
+                                <rect key="frame" x="149" y="256" width="77" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Add record"/>
+                                <connections>
+                                    <action selector="addRecord:" destination="Wqh-Kt-cQl" eventType="touchUpInside" id="te8-u5-htL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EqF-R2-FPv">
+                                <rect key="frame" x="172" y="294" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Exit"/>
+                                <connections>
+                                    <action selector="exitNow:" destination="Wqh-Kt-cQl" eventType="touchUpInside" id="eyo-R1-Cel"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Veq-Q4-FRR" firstAttribute="centerY" secondItem="Exm-RQ-1go" secondAttribute="centerY" id="9vm-2h-OSP"/>
+                            <constraint firstItem="Veq-Q4-FRR" firstAttribute="centerX" secondItem="Exm-RQ-1go" secondAttribute="centerX" id="Tfh-K5-cMT"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Main Menu" id="iRz-gn-MR0"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hBT-Is-ro3" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="356" y="699"/>
         </scene>
     </scenes>
 </document>
