@@ -22,6 +22,13 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         super.viewDidLoad()
         
         loadUsers()
+        
+        // update navigation title
+        self.navigationItem.title = "Records List"
+        
+        
+        self.tableView.estimatedRowHeight = 89
+        self.tableView.rowHeight = UITableViewAutomaticDimension
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,15 +37,16 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
     }
 
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (recordAccessorDelegate?.getAllRecords().count)!
+        if let allRecords = recordAccessorDelegate?.getAllRecords() {
+            return allRecords.count
+        }
+        return 0
     }
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Table view cells are reused and should be dequeued using a cell identifier
@@ -50,59 +58,19 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         
         // dictionary collection
         let user = phonebookuserkeys[indexPath.row]
+        if let allRecords = recordAccessorDelegate?.getAllRecords() {
+            cell.nameLabel.text = user
+            cell.phonenumberLabel.text = allRecords[user]?[0]
+            cell.addressLabel.text = allRecords[user]?[1]
+            cell.editButton.tag = indexPath.row
+            cell.deleteButton.tag = indexPath.row
+        }
         
-        cell.nameLabel.text = user
-        cell.phonenumberLabel.text = recordAccessorDelegate?.getAllRecords()[user]
-        cell.editButton.tag = indexPath.row
-        cell.deleteButton.tag = indexPath.row
+        // update the label height
+        cell.addressLabel.lineBreakMode = .byWordWrapping
+        cell.addressLabel.numberOfLines = 0
         return cell
     }
-    
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     //MARK: Private Methods
     private func loadUsers() {
@@ -117,17 +85,20 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
     @IBAction func editCurrent(_ sender: UIButton) {
         // present the edit screen modally
         if let editVC = self.storyboard!.instantiateViewController(withIdentifier:"editRecord") as? EditRecordViewController {
-            editVC.currentusername = phonebookuserkeys[sender.tag]
-            editVC.currentphonenumber = recordAccessorDelegate?.getAllRecords()[phonebookuserkeys[sender.tag]]!
-            editVC.recordAccessorDelegate = self.recordAccessorDelegate
-            editVC.editRecordDelegate = self
-            self.present(editVC, animated:true, completion:nil)
+            if var allRecords = (recordAccessorDelegate?.getAllRecords()) {
+                let name = phonebookuserkeys[sender.tag]
+                editVC.currentusername = name
+                editVC.currentphonenumber = allRecords[name]?[0]
+                editVC.currentuseraddress = allRecords[name]?[1]
+                editVC.recordAccessorDelegate = self.recordAccessorDelegate
+                editVC.editRecordDelegate = self
+                self.present(editVC, animated:true, completion:nil)
+            }
         }
-        
-        
     }
+    
     @IBAction func deleteCurrent(_ sender: UIButton) {
-        if var allRecords:[String:String] = (recordAccessorDelegate?.getAllRecords()) {
+        if var allRecords:[String:[String]] = (recordAccessorDelegate?.getAllRecords()) {
             allRecords.removeValue(forKey: phonebookuserkeys[sender.tag])
             recordAccessorDelegate?.setAllRecords(newRecords: allRecords)
         }

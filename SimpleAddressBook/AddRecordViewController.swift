@@ -14,6 +14,7 @@ class AddRecordViewController: UIViewController, UITextFieldDelegate {
     weak var recordAccessorDelegate:RecordAccessorDelegate?
     @IBOutlet weak var nameUser: UITextField!
     @IBOutlet weak var phoneNumber: UITextField!
+    @IBOutlet weak var addressUser: UITextField!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,16 +28,6 @@ class AddRecordViewController: UIViewController, UITextFieldDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     //MARK: UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -53,6 +44,7 @@ class AddRecordViewController: UIViewController, UITextFieldDelegate {
     @IBAction func addRecord(_ sender: UIButton) {
         let newusername = nameUser.text
         let newphonenumber = phoneNumber.text
+        let newuseraddress = addressUser.text
         
         guard let username = nameUser.text, !username.isEmpty else {
             let alert = UIAlertController(title: "Error", message: "Name is empty!", preferredStyle: UIAlertControllerStyle.alert)
@@ -68,10 +60,17 @@ class AddRecordViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
+        guard let useraddress = addressUser.text, !useraddress.isEmpty else {
+            let alert = UIAlertController(title: "Error", message: "Address is empty!", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler:nil))
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        
         if var allRecords = recordAccessorDelegate?.getAllRecords() {
             // validate add
             if allRecords[newusername!] == nil {
-                allRecords[newusername!] = newphonenumber!
+                allRecords[newusername!] = [newphonenumber!,newuseraddress!]
         
                 recordAccessorDelegate?.setAllRecords(newRecords: allRecords)
                 // dismiss the modal view

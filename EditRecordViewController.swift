@@ -13,6 +13,7 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
     // Main View Controller instance
     var currentusername:String!
     var currentphonenumber:String!
+    var currentuseraddress:String!
     
     weak var recordAccessorDelegate:RecordAccessorDelegate?
     weak var editRecordDelegate:EditRecordDelegate?
@@ -20,6 +21,7 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
     //MARK: Properties
     @IBOutlet weak var nameUser: UITextField!
     @IBOutlet weak var phoneNumber: UITextField!
+    @IBOutlet weak var addressUser: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,22 +31,14 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
         nameUser.text = currentusername
         phoneNumber.delegate = self
         phoneNumber.text = currentphonenumber
+        addressUser.delegate = self
+        addressUser.text = currentuseraddress
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     //MARK: UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -60,6 +54,7 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
     @IBAction func editRecord(_ sender: UIButton) {
         let newusername = nameUser.text
         let newphonenumber = phoneNumber.text
+        let newuseraddress = addressUser.text
         
         guard let username = nameUser.text, !username.isEmpty else {
             let alert = UIAlertController(title: "Error", message: "Name is empty!", preferredStyle: UIAlertControllerStyle.alert)
@@ -75,6 +70,13 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
+        guard let useraddress = addressUser.text, !useraddress.isEmpty else {
+            let alert = UIAlertController(title: "Error", message: "Address is empty!", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        
         if var allRecords = recordAccessorDelegate?.getAllRecords() {
             if (allRecords[newusername!] != nil) && (currentusername != newusername) {
                 let alert = UIAlertController(title: "Error", message: "\"" + newusername! + "\" is already in the record!", preferredStyle: UIAlertControllerStyle.alert)
@@ -83,7 +85,7 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
             } else {
                 
                 // apply changes and dismiss
-                allRecords[newusername!] = newphonenumber
+                allRecords[newusername!] = [newphonenumber!,newuseraddress!]
                 if currentusername != newusername {
                     allRecords[currentusername] = nil
                 }
@@ -98,8 +100,8 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
     @IBAction func cancelRecord(_ sender: UIButton) {
         
         //dismiss
-//        self.dismiss(animated: <#T##Bool#>, completion: <#T##(() -> Void)?##(() -> Void)?##() -> Void#>)
-        self.presentingViewController!.dismiss(animated:true, completion:nil)
+        self.dismiss(animated: true, completion:nil)
+        //        self.presentingViewController?.dismiss(animated:true, completion:nil)
     }
     
 }

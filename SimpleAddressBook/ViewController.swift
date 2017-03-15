@@ -9,22 +9,41 @@
 import UIKit
 
 protocol RecordAccessorDelegate: class {
-    func getAllRecords() -> [String:String]
-    func setAllRecords(newRecords: [String:String]) 
+    func getAllRecords() -> [String:[String]]
+    func setAllRecords(newRecords: [String:[String]])
 }
 
 class ViewController: UIViewController, RecordAccessorDelegate {
     // Constant
     let MAX_ITEM_COUNT = 10
+    let BUTTON_BORDERCOLOR = UIColor.orange.cgColor
+    let BUTTON_BORDERTHICKNESS:CGFloat = 1.0
+    let BUTTON_BORDERCORNERRAD:CGFloat = 7.0
     
     // User data
-    var phonebookusers = [String:String]()
+    var phonebookusers = [String:[String]]()
+    
+    //MARK: Properties
+    @IBOutlet weak var viewRecordsButton: UIButton!
+    @IBOutlet weak var addRecordButton: UIButton!
+    @IBOutlet weak var exitButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // init UI
+        let backgroundImage = UIImageView(frame: UIScreen.main.bounds)
+        backgroundImage.image = UIImage(named:"pointing")
+        self.view.insertSubview(backgroundImage, at:0)
+        
+        // update
+        updateButtonsForMain(button:viewRecordsButton)
+        updateButtonsForMain(button:addRecordButton)
+        updateButtonsForMain(button:exitButton)
+        
+        // init dummy data
         for idx in 1...(MAX_ITEM_COUNT - 1) {
-            phonebookusers["User\(idx)"] = "0123"
+            phonebookusers["User\(idx)"] = ["0123","the quick brown fox jumps over the lazy dog."]
         }
     }
 
@@ -33,26 +52,29 @@ class ViewController: UIViewController, RecordAccessorDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    //MARK: Private functions
+    func updateButtonsForMain(button: UIButton) {
+        // add blur effect
+        let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.prominent))
+        blurEffectView.frame = button.bounds
+        blurEffectView.layer.cornerRadius = BUTTON_BORDERCORNERRAD
+        blurEffectView.clipsToBounds = true
+        blurEffectView.isUserInteractionEnabled = false
+        
+        // change bordercolor
+        button.insertSubview(blurEffectView, at:0)
+        button.layer.cornerRadius = BUTTON_BORDERCORNERRAD
+        button.layer.borderWidth = BUTTON_BORDERTHICKNESS
+        button.layer.borderColor = BUTTON_BORDERCOLOR
+        button.setTitleColor(UIColor(cgColor:UIColor.orange.cgColor), for:UIControlState.normal)
+    }
+    
     //MARK: Actions
     @IBAction func viewAllRecords(_ sender: UIButton) {
         
-        // DEVNOTE: The following three methods are different ways of presenting a view controller
-        
-        /* // METHOD1: presents the new view controller modally, without navigation
-        let VC1 = self.storyboard!.instantiateViewController(withIdentifier:"listRecords") as! UITableViewController
-        self.present(controller, animated:true, completion:nil)
-        */
-        
-        // METHOD2: pushes the new view controller to the navigation stack of the existing navigation controller, back button is handled
         let VC1 = self.storyboard!.instantiateViewController(withIdentifier: "listRecords") as! UserInfoTableViewController
         VC1.recordAccessorDelegate = self
         self.navigationController!.pushViewController(VC1, animated:true)
-        
-        /* // METHOD3: creates a new navigation controller for the new view controller and present it modally, back button is not handled with this method
-        let VC1 = self.storyboard!.instantiateViewController(withIdentifier:"listRecords") as! UITableViewController
-        let navController = UINavigationController(: VC1)
-        self.present(navController, animated:true, completion:nil)
-        */
     }
     @IBAction func addRecord(_ sender: UIButton) {
         
@@ -76,10 +98,10 @@ class ViewController: UIViewController, RecordAccessorDelegate {
     }
     
     //MARK: Delegates
-    func getAllRecords() -> [String:String] {
+    func getAllRecords() -> [String:[String]] {
         return phonebookusers
     }
-    func setAllRecords(newRecords: [String:String]) {
+    func setAllRecords(newRecords: [String:[String]]) {
         phonebookusers = newRecords
     }
 }
