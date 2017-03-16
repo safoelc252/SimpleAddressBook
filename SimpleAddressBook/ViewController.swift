@@ -15,7 +15,7 @@ protocol RecordAccessorDelegate: class {
 
 class ViewController: UIViewController, RecordAccessorDelegate {
     // Constant
-    let MAX_ITEM_COUNT = 10
+    let MAX_ITEM_COUNT = 20
     let BUTTON_BORDERCOLOR = UIColor.orange.cgColor
     let BUTTON_BORDERTHICKNESS:CGFloat = 1.0
     let BUTTON_BORDERCORNERRAD:CGFloat = 7.0

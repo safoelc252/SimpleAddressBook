@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreGraphics // villarinc, added for dynamic rendering of text on images
 
 protocol EditRecordDelegate: class {
     func updateTable()
@@ -26,7 +27,7 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         // update navigation title
         self.navigationItem.title = "Records List"
         
-        
+        // make the cell height dynamic
         self.tableView.estimatedRowHeight = 89
         self.tableView.rowHeight = UITableViewAutomaticDimension
     }
@@ -69,6 +70,15 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         // update the label height
         cell.addressLabel.lineBreakMode = .byWordWrapping
         cell.addressLabel.numberOfLines = 0
+        
+        // add an image and make it round
+        
+        guard let firstcharinname = user.characters.first else {
+            fatalError("Cannot extract first character!")
+        }
+        
+        cell.userImageView.image = letterIconImage(drawText: String(firstcharinname) as NSString, atSize: cell.userImageView.frame.size)
+        
         return cell
     }
     
@@ -79,6 +89,77 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         for userkey in (recordAccessorDelegate?.getAllRecords().keys)! {
             phonebookuserkeys.append(userkey)
         }
+    }
+    
+    //MARK: Public methods
+    func letterIconImage(drawText text: NSString, atSize imgsize:CGSize) -> UIImage {
+        
+        // prepare the font
+        let textColor = UIColor.white
+        guard let textFont = UIFont(name: "Helvetica Bold", size: 40) else {
+            fatalError("Text font was not created!")
+        }
+        
+        let scale = UIScreen.main.scale
+        let apricotOrange = UIColor(red:CGFloat(251)/255.0,
+                                    green:CGFloat(206)/255.0,
+                                    blue:CGFloat(177)/255,
+                                    alpha:CGFloat(1.0))
+        let image = getRoundBkndImage(color: apricotOrange, size: imgsize, diameter: Int(imgsize.width - 20))
+        UIGraphicsBeginImageContextWithOptions(image.size, false, scale)
+        
+        let textFontAttributes = [
+            NSFontAttributeName: textFont,
+            NSForegroundColorAttributeName: textColor,
+            ] as [String : Any]
+        
+        // draw the image first
+        image.draw(in: CGRect(origin: CGPoint.zero, size: image.size))
+        
+        // then draw centered text
+        let stringsize = text.size(attributes: textFontAttributes)
+        let rect = CGRect(origin: CGPoint(x: (image.size.width - stringsize.width)/2,
+                                          y: (image.size.height - stringsize.height)/2),
+                          size: CGSize(width: stringsize.width,
+                                       height: stringsize.height))
+        text.draw(in: rect, withAttributes: textFontAttributes)
+        
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
+    }
+    
+    func getRoundBkndImage(color: UIColor, size: CGSize, diameter: Int) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        if let ctx = UIGraphicsGetCurrentContext() {
+            ctx.saveGState()
+        
+            let box = CGSize(width:diameter, height:diameter)
+            let point = CGPoint(x:(Int(size.width) - diameter)/2, y:(Int(size.height) - diameter)/2)
+            let circle = CGRect(origin:point, size: box)
+            ctx.setFillColor(color.cgColor)
+            ctx.fillEllipse(in: circle)
+            ctx.restoreGState()
+        }
+        
+        guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
+            fatalError("Image not generated!")
+        }
+        UIGraphicsEndImageContext()
+        return image
+    }
+    
+    //MARK: Appendix functions
+    func getRandColor() -> UIColor {
+        
+        return UIColor(red:CGFloat(randomInt(min: 0, max: 255))/255.0,
+                       green:CGFloat(randomInt(min: 0, max: 255))/255.0,
+                       blue:CGFloat(randomInt(min: 0, max: 255))/255,
+                       alpha:CGFloat(1.0))
+    }
+    func randomInt(min: Int, max:Int) -> Int {
+        return min + Int(arc4random_uniform(UInt32(max - min + 1)))
     }
     
     //MARK: Actions
