@@ -22,6 +22,8 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var nameUser: UITextField!
     @IBOutlet weak var phoneNumber: UITextField!
     @IBOutlet weak var addressUser: UITextField!
+    @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var cancelEditButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +35,10 @@ class EditRecordViewController: UIViewController, UITextFieldDelegate {
         phoneNumber.text = currentphonenumber
         addressUser.delegate = self
         addressUser.text = currentuseraddress
+        
+        // change button colors
+        editButton.setTitleColor(UIColor(cgColor:UIColor.orange.cgColor), for:UIControlState.normal)
+        cancelEditButton.setTitleColor(UIColor(cgColor:UIColor.orange.cgColor), for:UIControlState.normal)
     }
 
     override func didReceiveMemoryWarning() {

@@ -72,23 +72,32 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         cell.addressLabel.numberOfLines = 0
         
         // add an image and make it round
-        
         guard let firstcharinname = user.characters.first else {
             fatalError("Cannot extract first character!")
         }
         
         cell.userImageView.image = letterIconImage(drawText: String(firstcharinname) as NSString, atSize: cell.userImageView.frame.size)
         
+        // change button colors
+        cell.editButton.setTitleColor(UIColor(cgColor:UIColor.orange.cgColor), for:UIControlState.normal)
+        cell.deleteButton.setTitleColor(UIColor(cgColor:UIColor.orange.cgColor), for:UIControlState.normal)
+        
         return cell
     }
     
     //MARK: Private Methods
     private func loadUsers() {
-        phonebookuserkeys.removeAll()
+        var gettinguserkeys = [String]()
         // iterate collection
         for userkey in (recordAccessorDelegate?.getAllRecords().keys)! {
-            phonebookuserkeys.append(userkey)
+            gettinguserkeys.append(userkey)
         }
+        
+        //gettinguserkeys = //{ $0.fileID < $1.fileID }
+        phonebookuserkeys.removeAll()
+        phonebookuserkeys.append(contentsOf:gettinguserkeys.sorted())
+        // then sort
+        
     }
     
     //MARK: Public methods

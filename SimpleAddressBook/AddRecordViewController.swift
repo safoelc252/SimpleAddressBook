@@ -15,6 +15,8 @@ class AddRecordViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var nameUser: UITextField!
     @IBOutlet weak var phoneNumber: UITextField!
     @IBOutlet weak var addressUser: UITextField!
+    @IBOutlet weak var addButton: UIButton!
+    @IBOutlet weak var cancelAddButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +24,10 @@ class AddRecordViewController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view.
         nameUser.delegate = self
         phoneNumber.delegate = self
+        
+        // change button colors
+        addButton.setTitleColor(UIColor(cgColor:UIColor.orange.cgColor), for:UIControlState.normal)
+        cancelAddButton.setTitleColor(UIColor(cgColor:UIColor.orange.cgColor), for:UIControlState.normal)
     }
 
     override func didReceiveMemoryWarning() {

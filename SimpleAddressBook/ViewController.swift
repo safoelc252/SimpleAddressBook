@@ -43,7 +43,7 @@ class ViewController: UIViewController, RecordAccessorDelegate {
         
         // init dummy data
         for idx in 1...(MAX_ITEM_COUNT - 1) {
-            phonebookusers["User\(idx)"] = ["0123","the quick brown fox jumps over the lazy dog."]
+            phonebookusers["User\(idx)"] = ["0123","the quick brown fox jumps over the lazy dog. the quick brown fox jumps over the lazy dog."]
         }
     }
 
@@ -74,6 +74,7 @@ class ViewController: UIViewController, RecordAccessorDelegate {
         
         let VC1 = self.storyboard!.instantiateViewController(withIdentifier: "listRecords") as! UserInfoTableViewController
         VC1.recordAccessorDelegate = self
+        self.navigationController!.navigationBar.tintColor = UIColor.orange
         self.navigationController!.pushViewController(VC1, animated:true)
     }
     @IBAction func addRecord(_ sender: UIButton) {
