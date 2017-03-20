@@ -18,6 +18,9 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
     //MARK: Properties
     weak var recordAccessorDelegate: RecordAccessorDelegate?
     var phonebookuserkeys = [String]()
+    var phonebooksectionkeys = [String]()
+    var sectionedphonebookuserkeys = [String:[String]]()
+    var listitems = [Int:[Int]]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,14 +42,19 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
 
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return phonebooksectionkeys.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let allRecords = recordAccessorDelegate?.getAllRecords() {
-            return allRecords.count
+        if let sections = sectionedphonebookuserkeys[phonebooksectionkeys[section]] {
+            return sections.count
         }
+        
         return 0
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return phonebooksectionkeys[section]
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -57,14 +65,27 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
             fatalError("The dequeued cell is not an instance of UserEntryTableViewCell")
         }
         
+        /*
+        if (indexPath.section == 0 && indexPath.row == 0) {
+            listitems.removeAll()
+        }*/
+        
         // dictionary collection
-        let user = phonebookuserkeys[indexPath.row]
+        var names = sectionedphonebookuserkeys[phonebooksectionkeys[indexPath.section]]
+        guard var name = names?[indexPath.row] else {
+            fatalError("Could not extract name!")
+        }
+        
+        //let user = phonebookuserkeys[indexPath.row]
+        var tagidx = Int()
         if let allRecords = recordAccessorDelegate?.getAllRecords() {
-            cell.nameLabel.text = user
-            cell.phonenumberLabel.text = allRecords[user]?[0]
-            cell.addressLabel.text = allRecords[user]?[1]
-            cell.editButton.tag = indexPath.row
-            cell.deleteButton.tag = indexPath.row
+            tagidx = calcItemIndex(section: indexPath.section, row: indexPath.row)
+            cell.nameLabel.text = name
+            cell.phonenumberLabel.text = allRecords[name]?[0]
+            cell.addressLabel.text = allRecords[name]?[1]
+            cell.editButton.tag = tagidx
+            cell.deleteButton.tag = tagidx
+            listitems[tagidx] = [indexPath.section, indexPath.row]
         }
         
         // update the label height
@@ -72,7 +93,7 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         cell.addressLabel.numberOfLines = 0
         
         // add an image and make it round
-        guard let firstcharinname = user.characters.first else {
+        guard let firstcharinname = name.characters.first else {
             fatalError("Cannot extract first character!")
         }
         
@@ -81,23 +102,46 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         // change button colors
         cell.editButton.setTitleColor(UIColor(cgColor:UIColor.orange.cgColor), for:UIControlState.normal)
         cell.deleteButton.setTitleColor(UIColor(cgColor:UIColor.orange.cgColor), for:UIControlState.normal)
-        
         return cell
     }
     
     //MARK: Private Methods
     private func loadUsers() {
         var gettinguserkeys = [String]()
+        var gettingsectionkeys = [String]()
+        
+        guard let userkeys = recordAccessorDelegate?.getAllRecords().keys else {
+            fatalError("Could not obtain user keys!")
+        }
+        
         // iterate collection
-        for userkey in (recordAccessorDelegate?.getAllRecords().keys)! {
+        for userkey in userkeys {
             gettinguserkeys.append(userkey)
         }
         
-        //gettinguserkeys = //{ $0.fileID < $1.fileID }
         phonebookuserkeys.removeAll()
         phonebookuserkeys.append(contentsOf:gettinguserkeys.sorted())
-        // then sort
         
+        sectionedphonebookuserkeys.removeAll()
+        for name in phonebookuserkeys {
+            guard let key = name.characters.first else {
+                fatalError("Error!")
+            }
+            
+            // first letter of the name is the key e
+            if var arrayForLetter = sectionedphonebookuserkeys[String(key)] {
+                arrayForLetter.append(name)
+                sectionedphonebookuserkeys.updateValue(arrayForLetter, forKey: String(key))
+            } else {
+                sectionedphonebookuserkeys.updateValue([name], forKey: String(key))
+            }
+        }
+        
+        for sectionkey in sectionedphonebookuserkeys.keys {
+            gettingsectionkeys.append(sectionkey)
+        }
+        phonebooksectionkeys.removeAll()
+        phonebooksectionkeys.append(contentsOf:gettingsectionkeys.sorted())
     }
     
     //MARK: Public methods
@@ -159,6 +203,21 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         return image
     }
     
+    func calcItemIndex(section: Int, row: Int) -> Int {
+        var index = 0
+        for idx in 1...section+1 {
+            if let sections = sectionedphonebookuserkeys[phonebooksectionkeys[idx-1]] {
+                if (idx-1) == section {
+                    return index + row
+                }
+                else {
+                    index += sections.count
+                }
+            }
+        }
+        return 0
+    }
+    
     //MARK: Appendix functions
     func getRandColor() -> UIColor {
         
@@ -174,9 +233,16 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
     //MARK: Actions
     @IBAction func editCurrent(_ sender: UIButton) {
         // present the edit screen modally
-        if let editVC = self.storyboard!.instantiateViewController(withIdentifier:"editRecord") as? EditRecordViewController {
+        if let editVC = self.storyboard?.instantiateViewController(withIdentifier:"editRecord") as? EditRecordViewController {
             if var allRecords = (recordAccessorDelegate?.getAllRecords()) {
-                let name = phonebookuserkeys[sender.tag]
+                guard let pairitem = listitems[sender.tag] else {
+                    fatalError("Cannot extract pairitem")
+                }
+                var names = sectionedphonebookuserkeys[phonebooksectionkeys[pairitem[0]]]
+                guard let name = names?[pairitem[1]] else {
+                    fatalError("Could not extract name!")
+                }
+                //let name = phonebookuserkeys[sender.tag]
                 editVC.currentusername = name
                 editVC.currentphonenumber = allRecords[name]?[0]
                 editVC.currentuseraddress = allRecords[name]?[1]
@@ -189,7 +255,14 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
     
     @IBAction func deleteCurrent(_ sender: UIButton) {
         if var allRecords:[String:[String]] = (recordAccessorDelegate?.getAllRecords()) {
-            allRecords.removeValue(forKey: phonebookuserkeys[sender.tag])
+            guard let pairitem = listitems[sender.tag] else {
+                fatalError("Cannot extract pairitem")
+            }
+            var names = sectionedphonebookuserkeys[phonebooksectionkeys[pairitem[0]]]
+            guard let name = names?[pairitem[1]] else {
+                fatalError("Could not extract name!")
+            }
+            allRecords.removeValue(forKey: name)
             recordAccessorDelegate?.setAllRecords(newRecords: allRecords)
         }
         loadUsers()

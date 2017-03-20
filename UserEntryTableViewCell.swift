@@ -18,6 +18,7 @@ class UserEntryTableViewCell: UITableViewCell {
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var userImageView: UIImageView!
+    @IBOutlet weak var debugLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
