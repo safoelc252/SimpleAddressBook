@@ -105,6 +105,31 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var names = sectionedphonebookuserkeys[phonebooksectionkeys[indexPath.section]]
+        guard let name = names?[indexPath.row] else {
+            fatalError("Could not extract name!")
+        }
+        
+        if let allRecords = recordAccessorDelegate?.getAllRecords() {
+            guard let phonenumber = allRecords[name]?[0] else {
+                fatalError("Could not extract phone number!")
+            }
+            guard let address = allRecords[name]?[1] else {
+                fatalError("Could not extract address")
+            }
+            let alert = UIAlertController(title: "User details",
+                                          message: "Name: \(name)\nMobile: \(phonenumber)\nAddress: \(address)",
+                preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
+            //cell.nameLabel.text = name
+            //cell.phonenumberLabel.text = allRecords[name]?[0]
+            //cell.addressLabel.text = allRecords[name]?[1]
+        }
+    }
+    
     //MARK: Private Methods
     private func loadUsers() {
         var gettinguserkeys = [String]()
