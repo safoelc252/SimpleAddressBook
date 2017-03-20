@@ -123,10 +123,6 @@ class UserInfoTableViewController: UITableViewController, EditRecordDelegate {
                 preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
-            
-            //cell.nameLabel.text = name
-            //cell.phonenumberLabel.text = allRecords[name]?[0]
-            //cell.addressLabel.text = allRecords[name]?[1]
         }
     }
     
